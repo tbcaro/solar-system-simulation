@@ -25,7 +25,7 @@ function SolarSystem () {
 
       // TBC : Set renderer sizes and camera position
       this.renderer.setSize( window.innerWidth, window.innerHeight );
-      this.camera.position.y = 200;
+      this.camera.position.y = 500;
       this.camera.lookAt( this.star.position );
 
       // TBC : Add render canvas to DOM
