@@ -1,7 +1,8 @@
 function SolarSystem () {
   return {
     /**
-    *
+    * TBC : Function to initialize required ThreeJS and simulation components and 'global' constants.
+    * Sets up user orbit controls, camera, and scene. Also appends the renderer element to the DOM.
     */
     init: function () {
       // TBC : Constants
@@ -32,7 +33,7 @@ function SolarSystem () {
       document.body.appendChild( this.renderer.domElement );
     },
     /**
-    *
+    * TBC : Generate the central star and associated lighting
     */
     seedStar: function () {
       var geometry = new THREE.IcosahedronGeometry( this.STAR_SIZE, 5 );
@@ -46,7 +47,7 @@ function SolarSystem () {
       this.scene.add( new THREE.PointLight( this.STAR_COLOR, 1 ) );
     },
     /**
-    *
+    * TBC : Generate the planets and their associated data
     */
     seedPlanets: function () {
       const SPEED_MODIFIER = .10;
@@ -62,6 +63,7 @@ function SolarSystem () {
         pluto: { }
       };
 
+      // TBC : Set orbital offset for stepping out through orbital layers...i.e. offset from mercury to venus
       var orbitOffset = this.STAR_SIZE;
 
       for ( var p in this.planets ) {
@@ -72,6 +74,7 @@ function SolarSystem () {
         var size;
         var spherical;
 
+        // TBC : Setup planet specific data
         switch (p) {
           case 'mercury':
             size = 1.5;
@@ -167,6 +170,7 @@ function SolarSystem () {
         var geometry = new THREE.IcosahedronGeometry( size, spherical );
         var material = new THREE.MeshStandardMaterial( { color: color } );
 
+        // TBC : Create planet and add to scene
         var planet = new THREE.Mesh( geometry, material );
         planet.position.set( orbRadius, 0, 0 );
         planet.rotSpeed = rotSpeed;
@@ -179,7 +183,8 @@ function SolarSystem () {
       }
     },
     /**
-    *
+    * TBC : Perform animation between frames.
+    * Specifically, perform planet orbital and rotational animations.
     */
     animate: function () {
       for ( var p in this.planets ) {
@@ -194,7 +199,7 @@ function SolarSystem () {
       }
     },
     /**
-    *
+    * TBC : Render 3d simulation to the UI at 60 FPS
     */
     render: function () {
       requestAnimationFrame( () => { this.render() } );
@@ -204,7 +209,7 @@ function SolarSystem () {
       this.renderer.render( this.scene, this.camera );
     },
     /**
-    *
+    * initialize the simulation and begin rendering
     */
     run: function () {
       this.init();
