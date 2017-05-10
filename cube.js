@@ -1,9 +1,13 @@
-function SolarSystem() {
+function SolarSystem () {
   return {
     /**
     *
     */
-    init: function() {
+    init: function () {
+      // TBC : Constants
+      this.STAR_SIZE = 25;
+      this.STAR_COLOR = 0xffff00;
+
       // TBC : Setup threejs required entities
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
@@ -22,7 +26,6 @@ function SolarSystem() {
       // TBC : Add objects to scene
       this.seedStar();
       this.seedPlanets();
-      this.seedMoons();
 
       // TBC : Add render canvas to DOM
       document.body.appendChild( this.renderer.domElement );
@@ -30,49 +33,84 @@ function SolarSystem() {
     /**
     *
     */
-    seedStar: function() {
-      var geometry = new THREE.IcosahedronGeometry( 15, 5 );
-      var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+    seedStar: function () {
+      var geometry = new THREE.IcosahedronGeometry( this.STAR_SIZE, 5 );
+      var material = new THREE.MeshBasicMaterial( { color: this.STAR_COLOR } );
 
       this.star = new THREE.Mesh( geometry, material );
       this.scene.add( this.star );
 
       // TBC : Also add light
-      // this.scene.add( new THREE.AmbientLight( 0x404040 ) ); // soft white light
       this.scene.add( new THREE.AmbientLight( 0x707070 ) );
-      this.scene.add( new THREE.PointLight( 0xffffff, 1, 100 ) );
+      this.scene.add( new THREE.PointLight( this.STAR_COLOR, 1, 100 ) );
     },
     /**
     *
     */
-    seedPlanets: function() {
-      this.planets = [];
+    seedPlanets: function () {
+      const SPEED_MODIFIER = .25;
+      // this.planets = { mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto };
+      this.planets = { mercury: { } };
 
-      var geometry = new THREE.IcosahedronGeometry( 1, 5 );
-      var material = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
 
-      var planet = new THREE.Mesh( geometry, material );
-      planet.position.set( 50, 0, 0 );
+      for ( var p in this.planets ) {
+        var rotSpeed;
+        var orbSpeed;
+        var orbRadius;
+        var color;
+        var size;
+        var spherical;
 
-      this.scene.add( planet );
-      this.planets.push(planet);
+        switch (p) {
+          case 'mercury':
+            rotSpeed = 1 / 58;
+            orbSpeed = 2 * Math.PI * SPEED_MODIFIER / 88;
+            orbRadius = this.STAR_SIZE + 10;
+            color = 0xe2e2e2;
+            size = 1.5;
+            spherical = 0;
+            break;
+
+          // case 'venus':
+          //   break;
+          //
+          // case 'earth':
+          //   break;
+        }
+
+        var geometry = new THREE.IcosahedronGeometry( size, spherical );
+        var material = new THREE.MeshStandardMaterial( { color: color } );
+
+        var planet = new THREE.Mesh( geometry, material );
+        planet.position.set( orbRadius, 0, 0 );
+        planet.rotSpeed = rotSpeed;
+        planet.orbSpeed = orbSpeed;
+        planet.orbRadius = orbRadius;
+        planet.orbPos = Math.random() * Math.PI * 2;
+
+        this.scene.add( planet );
+        this.planets[p] = planet;
+      }
     },
     /**
     *
     */
-    seedMoons: function() {
-
+    animate: function () {
+      for ( var p in this.planets ) {
+        var planet = this.planets[p];
+        planet.rotation.y += planet.rotSpeed;
+        planet.orbPos += planet.orbSpeed;
+        planet.position.set(
+          Math.cos(planet.orbPos) * planet.orbRadius,
+          0,
+          Math.sin(planet.orbPos) * planet.orbRadius
+        )
+      }
     },
     /**
     *
     */
-    animate: function() {
-      
-    },
-    /**
-    *
-    */
-    render: function() {
+    render: function () {
       requestAnimationFrame( () => { this.render() } );
 
       this.animate();
@@ -82,7 +120,7 @@ function SolarSystem() {
     /**
     *
     */
-    run: function() {
+    run: function () {
       this.init();
       this.render();
     }
