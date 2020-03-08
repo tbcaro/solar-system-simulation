@@ -29,7 +29,6 @@ links:
 - https://en.wikipedia.org/wiki/Saturn
 - https://en.wikipedia.org/wiki/Uranus
 - https://en.wikipedia.org/wiki/Neptune
--
 
 To determine the appropriate color that I wanted to use for each planet, I used
 the site color-hex for the pallete.
